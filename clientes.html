@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Área de clientes — LexIA</title>
+<meta name="description" content="Zona de clientes de LexIA: descarga del instalador y gestión de la suscripción." />
+<!-- Esta pagina NO debe salir en Google. No porque tenga nada secreto dentro
+     (el instalador no esta aqui: esta en un almacen privado y hace falta la
+     clave de licencia), sino porque no tiene ningun sentido que una gestoria
+     que aun no es cliente aterrice aqui desde una busqueda. -->
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --tinta:#0e1726; --texto:#26344a; --suave:#5f7086;
+  --linea:#e2e8f2; --papel:#ffffff; --papel-2:#f5f8fc;
+  --azul:#1f5fbf; --azul-claro:#e9f1fd; --azul-oscuro:#164a99;
+  --ok:#0f7b4f; --ok-fondo:#e6f6ee; --error:#b3261e; --error-fondo:#fdecea;
+  --aviso:#8a5a00; --aviso-fondo:#fff6e0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel-2);color:var(--texto);
+     font:400 16px/1.65 Inter,-apple-system,Segoe UI,sans-serif}
+a{color:var(--azul-oscuro)}
+.container{max-width:760px;margin:0 auto;padding:0 20px}
+nav{background:var(--papel);border-bottom:1px solid var(--linea);padding:14px 0}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;
+           max-width:760px;margin:0 auto;padding:0 20px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;
+       color:var(--tinta);text-decoration:none}
+.brand svg{width:30px;height:30px}
+.acento{color:var(--azul)}
+header{padding:44px 0 8px}
+h1{font-size:clamp(26px,5vw,36px);line-height:1.2;margin:0 0 10px;color:var(--tinta)}
+.entradilla{color:var(--suave);margin:0 0 8px}
+.tarjeta{background:var(--papel);border:1px solid var(--linea);border-radius:16px;
+         padding:26px;margin:22px 0}
+.tarjeta h2{font-size:21px;margin:0 0 6px;color:var(--tinta)}
+.tarjeta p.sub{color:var(--suave);margin:0 0 18px;font-size:15px}
+label{display:block;font-weight:600;font-size:14px;margin-bottom:6px;color:var(--tinta)}
+input[type=text]{width:100%;padding:13px 14px;border:1.5px solid var(--linea);
+  border-radius:10px;font:600 16px/1 Inter,monospace;letter-spacing:.5px;
+  text-transform:uppercase;background:var(--papel)}
+input[type=text]:focus{outline:none;border-color:var(--azul)}
+.fila{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
+.fila input{flex:1 1 240px}
+button{font:600 15px/1 Inter,sans-serif;padding:13px 22px;border-radius:10px;
+       border:1.5px solid transparent;cursor:pointer;white-space:nowrap}
+.btn-primario{background:var(--azul);color:#fff}
+.btn-primario:hover{background:var(--azul-oscuro)}
+.btn-primario[disabled]{opacity:.55;cursor:default}
+.btn-suave{background:var(--papel);color:var(--azul-oscuro);border-color:var(--linea)}
+.aviso{margin-top:16px;padding:14px 16px;border-radius:10px;font-size:15px;display:none}
+.aviso.visible{display:block}
+.aviso.ok{background:var(--ok-fondo);color:var(--ok)}
+.aviso.mal{background:var(--error-fondo);color:var(--error)}
+.aviso.neutro{background:var(--azul-claro);color:var(--azul-oscuro)}
+.huella{font:600 13px/1.5 Consolas,ui-monospace,monospace;word-break:break-all;
+        background:var(--papel-2);border:1px solid var(--linea);border-radius:8px;
+        padding:10px 12px;margin-top:10px;color:var(--tinta)}
+.nota{font-size:14px;color:var(--suave);margin-top:14px}
+.barra-progreso{display:none;height:8px;background:var(--linea);border-radius:99px;
+                overflow:hidden;margin-top:14px}
+.barra-progreso.visible{display:block}
+#barra-dentro{height:100%;width:0;background:var(--azul);
+              transition:width .2s linear;border-radius:99px}
+.desplegable.oculto{display:none}
+.desplegable{margin-top:16px;border:1px solid var(--linea);border-radius:12px;
+             background:var(--papel-2)}
+.desplegable summary{cursor:pointer;padding:13px 16px;font-weight:600;
+                     font-size:14.5px;color:var(--azul-oscuro);list-style:none}
+.desplegable summary::-webkit-details-marker{display:none}
+.desplegable summary::before{content:"+ ";font-weight:700}
+.desplegable[open] summary::before{content:"\2212 "}
+.desplegable .dentro{padding:0 16px 16px;font-size:14.5px}
+.desplegable p{margin:10px 0}
+pre{background:var(--tinta);color:#e6edf7;padding:13px 14px;border-radius:9px;
+    font:500 12.5px/1.6 Consolas,ui-monospace,monospace;overflow-x:auto;
+    white-space:pre-wrap;word-break:break-all;margin:8px 0}
+code{font:500 13px Consolas,ui-monospace,monospace;background:var(--linea);
+     padding:1px 5px;border-radius:4px}
+.recuadro-aviso{background:var(--aviso-fondo);color:var(--aviso);border-radius:10px;
+                padding:14px 16px;font-size:15px;margin-top:18px}
+footer{border-top:1px solid var(--linea);margin-top:40px;padding:24px 0 44px;
+       font-size:14px;color:var(--suave)}
+footer a{margin-right:16px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 64 64" role="img" aria-label="LexIA"><rect width="64" height="64" rx="15" fill="#1f5fbf"/><circle cx="28" cy="27" r="12" fill="none" stroke="#fff" stroke-width="5"/><path d="M37 36 L50 49" stroke="#fff" stroke-width="6" stroke-linecap="round"/></svg>
+      <span>Lex<span class="acento">IA</span></span>
+    </a>
+    <a href="index.html#precios" class="btn-suave" style="padding:10px 16px;border:1.5px solid var(--linea);border-radius:10px;text-decoration:none;font-weight:600;font-size:14px">Contratar</a>
+  </div>
+</nav>
+
+<div class="container">
+  <header>
+    <h1>Área de clientes</h1>
+    <p class="entradilla">Aquí se descarga LexIA y se gestiona la suscripción.
+       Todo con la clave de licencia que os llegó por correo al contratar.</p>
+  </header>
+
+  <!-- ── DESCARGA ────────────────────────────────────────────────────── -->
+  <div class="tarjeta">
+    <h2>Descargar LexIA</h2>
+    <p class="sub">El instalador no está publicado en ninguna dirección fija:
+       se genera un enlace para vosotros, válido durante unos minutos.</p>
+
+    <label for="clave-descarga">Clave de licencia</label>
+    <div class="fila">
+      <input id="clave-descarga" type="text" placeholder="LEXIA-XXXX-XXXX-XXXX"
+             autocomplete="off" spellcheck="false" maxlength="24" />
+      <button class="btn-primario" id="btn-descargar">Descargar</button>
+    </div>
+    <div class="aviso" id="aviso-descarga"></div>
+
+    <div class="recuadro-aviso" id="explicacion-comprobacion">
+      <b>El archivo se comprueba solo.</b> Antes de entregároslo, esta página
+      calcula su huella digital (su SHA-256) y la compara con la del instalador
+      que publicamos. Si no coincidiera, no os lo entrega.
+      <br><br>
+      Y una vez instalada, la comprobación la hace <b>LexIA</b>: cuando
+      avisemos de que hay versión nueva, ella misma comprueba el archivo
+      descargado con una clave que lleva dentro del programa, sin depender de
+      esta página.
+    </div>
+
+    <details class="desplegable oculto" id="comprobar-a-mano">
+      <summary>Antes de ejecutarlo: comprobarlo vosotros mismos (opcional, solo la primera vez)</summary>
+      <div class="dentro">
+        <p>Esto <b>no hace falta</b> para instalar: la página ya lo ha
+           comprobado. Lo dejamos porque es la única comprobación que
+           <b>no depende de nosotros</b>, y la primera vez que instaláis un
+           programa de alguien a quien no conocéis, es razonable no fiaros de su
+           propia web. A partir de la segunda instalación ya no tiene sentido
+           repetirlo: lo hace LexIA.</p>
+
+        <p><b>1.</b> Abrid PowerShell (tecla Windows, escribid <code>powershell</code>,
+           Enter) y pegad esto, cambiando el nombre del archivo si el vuestro se
+           llama distinto:</p>
+        <pre id="orden-comprobar">Get-FileHash "$HOME\Downloads\<span id="nombre-exe">LexIA-instalador.exe</span>" -Algorithm SHA256 | Select-Object -ExpandProperty Hash</pre>
+        <button class="btn-suave" id="copiar-orden" type="button">Copiar el comando</button>
+
+        <p style="margin-top:16px"><b>2.</b> Comparad lo que salga con esto. Da
+           igual mayúsculas o minúsculas; lo que tiene que coincidir son todas
+           las letras y números:</p>
+        <div class="huella" id="huella-oficial">Descargad primero y aquí aparecerá la huella de vuestra versión.</div>
+
+        <p><b>3.</b> Si coincide, adelante. Si no coincide, no ejecutéis el
+           archivo y escribidnos a
+           <a href="mailto:lexiagestoria@gmail.com">lexiagestoria@gmail.com</a>.</p>
+
+        <p style="font-size:13.5px;color:var(--suave)">Windows avisará de que el
+           editor es desconocido al ejecutarlo. Es normal y no significa que el
+           archivo esté mal: significa que todavía no hemos comprado el
+           certificado de firma. Se pulsa «Más información» → «Ejecutar de todas
+           formas».</p>
+      </div>
+    </details>
+
+    <div class="barra-progreso" id="barra"><div id="barra-dentro"></div></div>
+
+    <p class="nota">Un solo instalador sirve para todo: al ejecutarlo os pregunta
+       si ese ordenador es el servidor o un puesto de trabajo.</p>
+  </div>
+
+  <!-- ── SUSCRIPCION Y BAJA ──────────────────────────────────────────── -->
+  <div class="tarjeta">
+    <h2>Facturas, tarjeta y dar de baja</h2>
+    <p class="sub">Se abre vuestra página de facturación, donde podéis ver y
+       descargar las facturas, cambiar la tarjeta y cancelar la suscripción
+       vosotros mismos, sin escribirnos ni esperar a que contestemos.</p>
+
+    <label for="clave-portal">Clave de licencia</label>
+    <div class="fila">
+      <input id="clave-portal" type="text" placeholder="LEXIA-XXXX-XXXX-XXXX"
+             autocomplete="off" spellcheck="false" maxlength="24" />
+      <button class="btn-primario" id="btn-portal">Entrar</button>
+    </div>
+    <div class="aviso" id="aviso-portal"></div>
+
+    <p class="nota"><b>Qué pasa si canceláis:</b> LexIA no se apaga de golpe ni
+       borra nada. Sigue funcionando hasta el final del periodo que ya tenéis
+       pagado y después deja de renovarse. Vuestros documentos son vuestros y
+       están en vuestro servidor: nunca han estado en ningún otro sitio, así que
+       no hay nada que recuperar ni que reclamar.</p>
+  </div>
+
+  <p class="nota">¿La clave no aparece? Está en el correo de bienvenida, y también
+     dentro de LexIA, en <b>Ajustes</b>. Si no la encontráis, escribid a
+     <a href="mailto:lexiagestoria@gmail.com">lexiagestoria@gmail.com</a>
+     desde el correo con el que contratasteis.</p>
+
+  <footer>
+    <a href="index.html">Inicio</a>
+    <a href="aviso-legal.html">Aviso legal</a>
+    <a href="privacidad.html">Privacidad</a>
+    <a href="terminos.html">Términos</a>
+    <a href="cookies.html">Cookies</a>
+  </footer>
+</div>
+
+<script>
+var API = "https://fugptizcgbkbinxazlll.supabase.co/functions/v1";
+
+function $(s){ return document.querySelector(s); }
+
+function decir(caja, texto, tipo){
+  var a = $(caja);
+  a.className = "aviso visible " + (tipo || "neutro");
+  a.innerHTML = texto;
+}
+
+function limpiar(v){ return (v || "").trim().toUpperCase().replace(/\s+/g, ""); }
+
+// Se formatea mientras se escribe: la clave se dicta por telefono y la gente
+// pone los guiones donde puede. Asi no hay forma de escribirla "mal".
+function autoformato(input){
+  input.addEventListener("input", function(){
+    var crudo = input.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+    if (crudo.indexOf("LEXIA") === 0) crudo = crudo.slice(5);
+    var trozos = crudo.match(/.{1,4}/g) || [];
+    input.value = crudo ? "LEXIA-" + trozos.slice(0, 3).join("-") : "";
+  });
+}
+autoformato($("#clave-descarga"));
+autoformato($("#clave-portal"));
+
+// El limite de tiempo no es un adorno. Sin el, si nuestro servidor no contesta
+// (corte de red, Supabase caido, un proxy de la gestoria que bloquea la
+// salida) la pagina se queda en "Comprobando la licencia..." para siempre y el
+// cliente no sabe si esperar, repetir o llamarnos. Salio probando: el navegador
+// tardo mas de 12 segundos en admitir que no habia conexion.
+var SEGUNDOS_LIMITE = 20;
+
+function pedir(ruta, clave){
+  var corta = new AbortController();
+  var reloj = setTimeout(function(){ corta.abort(); }, SEGUNDOS_LIMITE * 1000);
+  return fetch(API + "/" + ruta, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ clave: clave, volver: location.href }),
+    signal: corta.signal
+  }).then(function(r){
+    clearTimeout(reloj);
+    return r.json();
+  }, function(e){
+    clearTimeout(reloj);
+    throw e;
+  });
+}
+
+// ── Descarga, comprobando el archivo antes de entregarlo ──────────────
+//
+// Lo que hace y lo que NO hace, para que no se nos olvide:
+//
+// SI protege de que la descarga se corte a medias, y de que alguien cambie el
+// archivo en el almacen sin cambiar el manifiesto.
+//
+// NO protege de que nos revienten esta web: quien pueda cambiar el instalador
+// tambien puede cambiar este codigo y hacer que diga "correcto". Esa comprobacion
+// solo la puede hacer algo que no venga de aqui: LexIA ya instalada (que lleva
+// nuestra clave publica dentro) o, mejor, un certificado de firma de Windows.
+// El texto de la pagina lo dice asi de claro a proposito.
+
+// El bloque "comprobarlo vosotros mismos" se rellena con los datos de ESTA
+// descarga. Dejarlo con un nombre de archivo generico obligaria al cliente a
+// adivinar como se llama el suyo, que es justo el tipo de detalle por el que
+// la gente abandona a medias.
+function prepararComprobacionManual(d, ensenar){
+  var caja = document.getElementById("comprobar-a-mano");
+  if (caja && ensenar) caja.classList.remove("oculto");
+  var n = document.getElementById("nombre-exe");
+  if (n) n.textContent = d.archivo || "LexIA-instalador.exe";
+  var h = document.getElementById("huella-oficial");
+  if (h) h.textContent = (d.sha256 || "").toUpperCase();
+}
+
+document.getElementById("copiar-orden").addEventListener("click", function(){
+  var b = this;
+  var texto = document.getElementById("orden-comprobar").innerText;
+  var listo = function(){
+    b.textContent = "Copiado";
+    setTimeout(function(){ b.textContent = "Copiar el comando"; }, 2500);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(texto).then(listo, function(){ b.textContent = "Copiadlo a mano"; });
+  } else {
+    // Sin portapapeles (http, o navegador viejo): se selecciona para que al
+    // menos baste con Ctrl+C, en vez de dejar un boton que no hace nada.
+    var r = document.createRange(); r.selectNodeContents(document.getElementById("orden-comprobar"));
+    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    b.textContent = "Seleccionado: pulsad Ctrl+C";
+  }
+});
+
+function huellaLegible(hex){
+  return (hex.match(/.{1,8}/g) || []).join(" ");
+}
+
+function barra(porcentaje){
+  var b = $("#barra");
+  if (porcentaje === null){ b.classList.remove("visible"); return; }
+  b.classList.add("visible");
+  $("#barra-dentro").style.width = porcentaje + "%";
+}
+
+// Baja el archivo mostrando el avance y devuelve sus bytes.
+function bajarConAvance(url, tamano){
+  return fetch(url).then(function(r){
+    if (!r.ok) throw new Error("respuesta " + r.status);
+    if (!r.body || !window.ReadableStream) return r.arrayBuffer();
+    var lector = r.body.getReader(), trozos = [], leidos = 0;
+    return new Promise(function(listo, falla){
+      (function siguiente(){
+        lector.read().then(function(res){
+          if (res.done){
+            var todo = new Uint8Array(leidos), i = 0;
+            trozos.forEach(function(t){ todo.set(t, i); i += t.length; });
+            listo(todo.buffer);
+            return;
+          }
+          trozos.push(res.value); leidos += res.value.length;
+          if (tamano) barra(Math.min(99, Math.round(leidos * 100 / tamano)));
+          siguiente();
+        }, falla);
+      })();
+    });
+  });
+}
+
+function sha256De(buffer){
+  if (!window.crypto || !window.crypto.subtle) return Promise.resolve(null);
+  return window.crypto.subtle.digest("SHA-256", buffer).then(function(h){
+    return Array.prototype.map.call(new Uint8Array(h), function(b){
+      return ("0" + b.toString(16)).slice(-2);
+    }).join("");
+  });
+}
+
+function entregar(bytesOUrl, nombre){
+  var a = document.createElement("a");
+  a.href = (typeof bytesOUrl === "string") ? bytesOUrl
+         : URL.createObjectURL(new Blob([bytesOUrl], {type:"application/octet-stream"}));
+  a.download = nombre || "";
+  document.body.appendChild(a); a.click(); a.remove();
+  if (typeof bytesOUrl !== "string") setTimeout(function(){ URL.revokeObjectURL(a.href); }, 60000);
+}
+
+$("#btn-descargar").addEventListener("click", function(){
+  var b = this, clave = limpiar($("#clave-descarga").value);
+  if (!clave) { decir("#aviso-descarga", "Escribid vuestra clave de licencia.", "mal"); return; }
+  b.disabled = true; b.textContent = "Un momento…";
+  barra(null);
+  decir("#aviso-descarga", "Comprobando la licencia…", "neutro");
+
+  var d = null;
+  pedir("descargar", clave).then(function(resp){
+    d = resp;
+    if (!d.ok) throw { suyo: true, mensaje: d.mensaje || "No se ha podido preparar la descarga." };
+
+    prepararComprobacionManual(d, false);
+    var mb = d.tamano ? (d.tamano / 1048576).toFixed(0) + " MB" : "";
+    decir("#aviso-descarga", "Descargando LexIA <b>" + d.version + "</b>"
+          + (mb ? " · " + mb : "") + "…<br>No cerréis esta pestaña.", "neutro");
+    b.textContent = "Descargando…";
+    return bajarConAvance(d.url, d.tamano);
+  }).then(function(bytes){
+    barra(100);
+    b.textContent = "Comprobando…";
+    decir("#aviso-descarga", "Descargado. Comprobando que el archivo es el nuestro…", "neutro");
+    return sha256De(bytes).then(function(huella){ return {bytes: bytes, huella: huella}; });
+  }).then(function(res){
+    barra(null);
+
+    // Navegador sin crypto.subtle (o pagina servida por http). No se puede
+    // comprobar, y se dice: mejor que mentir con un "correcto".
+    if (!res.huella){
+      entregar(res.bytes, d.archivo);
+      prepararComprobacionManual(d, true);
+      decir("#aviso-descarga",
+        "<b>LexIA " + d.version + " descargado.</b><br>Este navegador no permite "
+        + "comprobar el archivo automáticamente. Cuando instaléis LexIA, ella "
+        + "misma comprobará las siguientes descargas."
+        + "<div class='huella'>SHA-256 publicado<br>" + huellaLegible(d.sha256) + "</div>", "ok");
+      return;
+    }
+
+    if (res.huella !== (d.sha256 || "").toLowerCase()){
+      // No se entrega el archivo. Punto.
+      decir("#aviso-descarga",
+        "<b>El archivo descargado NO coincide con el que hemos publicado.</b><br>"
+        + "No os lo entregamos. Lo más probable es que la descarga se haya "
+        + "cortado: volved a intentarlo. Si vuelve a pasar, escribidnos a "
+        + "lexiagestoria@gmail.com antes de instalar nada."
+        + "<div class='huella'>Esperado&nbsp;&nbsp;" + huellaLegible(d.sha256)
+        + "<br>Recibido&nbsp;&nbsp;" + huellaLegible(res.huella) + "</div>", "mal");
+      return;
+    }
+
+    entregar(res.bytes, d.archivo);
+    prepararComprobacionManual(d, true);
+    decir("#aviso-descarga",
+      "<b>LexIA " + d.version + " · archivo comprobado.</b><br>"
+      + "La huella coincide con la del instalador que publicamos. Ya se puede "
+      + "ejecutar. Windows puede avisar de que el editor es desconocido: es "
+      + "normal, todavía no tenemos certificado."
+      + "<div class='huella'>SHA-256<br>" + huellaLegible(res.huella) + "</div>", "ok");
+
+  }).catch(function(e){
+    barra(null);
+    if (e && e.suyo){ decir("#aviso-descarga", e.mensaje, "mal"); return; }
+
+    // Si la descarga por aqui no se puede hacer (el navegador la bloquea entre
+    // dominios, o no hay memoria para un archivo grande), NO se deja al cliente
+    // sin instalador: se le entrega por el camino normal y se le enseña la
+    // huella. Sin esto, un detalle tecnico dejaria a una gestoria sin poder
+    // instalar lo que acaba de pagar.
+    if (d && d.ok && d.url){
+      entregar(d.url, d.archivo);
+      prepararComprobacionManual(d, true);
+      decir("#aviso-descarga",
+        "<b>LexIA " + d.version + ".</b> La descarga ha empezado por el camino "
+        + "normal: este navegador no nos ha dejado comprobarla aquí. "
+        + "Cuando instaléis LexIA, ella comprobará las siguientes."
+        + "<div class='huella'>SHA-256 publicado<br>" + huellaLegible(d.sha256) + "</div>", "ok");
+      return;
+    }
+    decir("#aviso-descarga", "No hemos podido conectar con el servidor de "
+      + "licencias. Comprobad la conexión a internet y volved a intentarlo; si "
+      + "sigue igual, escribidnos a lexiagestoria@gmail.com.", "mal");
+  }).then(function(){
+    b.disabled = false; b.textContent = "Descargar";
+  });
+});
+
+// ── Portal de facturacion ─────────────────────────────────────────────
+$("#btn-portal").addEventListener("click", function(){
+  var b = this, clave = limpiar($("#clave-portal").value);
+  if (!clave) { decir("#aviso-portal", "Escribid vuestra clave de licencia.", "mal"); return; }
+  b.disabled = true; b.textContent = "Abriendo…";
+  decir("#aviso-portal", "Preparando vuestra página de facturación…", "neutro");
+
+  pedir("portal", clave).then(function(d){
+    if (!d.ok || !d.url) { decir("#aviso-portal", d.mensaje || "No se ha podido abrir.", "mal"); return; }
+    decir("#aviso-portal", "Listo. Si no se abre sola, " +
+          '<a href="' + d.url + '">entrad aquí</a>.', "ok");
+    location.href = d.url;
+  }).catch(function(){
+    decir("#aviso-portal", "No hemos podido conectar con el servidor. Comprobad la conexión a internet y volved a intentarlo; si sigue igual, escribidnos a lexiagestoria@gmail.com.", "mal");
+  }).then(function(){
+    b.disabled = false; b.textContent = "Entrar";
+  });
+});
+
+// Enter en cualquiera de los dos campos hace lo esperable.
+$("#clave-descarga").addEventListener("keydown", function(e){ if(e.key==="Enter") $("#btn-descargar").click(); });
+$("#clave-portal").addEventListener("keydown", function(e){ if(e.key==="Enter") $("#btn-portal").click(); });
+</script>
+</body>
+</html>
