@@ -312,8 +312,8 @@ function barra(porcentaje){
   $("#barra-dentro").style.width = porcentaje + "%";
 }
 
-// Baja el archivo mostrando el avance y devuelve sus bytes.
-function bajarConAvance(url, tamano){
+// Baja UN archivo mostrando el avance y devuelve sus bytes.
+function bajarUno(url, tamano, yaLeidos, totalTodo, alAvanzar){
   return fetch(url).then(function(r){
     if (!r.ok) throw new Error("respuesta " + r.status);
     if (!r.body || !window.ReadableStream) return r.arrayBuffer();
@@ -328,12 +328,39 @@ function bajarConAvance(url, tamano){
             return;
           }
           trozos.push(res.value); leidos += res.value.length;
-          if (tamano) barra(Math.min(99, Math.round(leidos * 100 / tamano)));
+          if (totalTodo) alAvanzar(yaLeidos + leidos);
           siguiente();
         }, falla);
       })();
     });
   });
+}
+
+// El instalador esta partido en el almacen porque el plan gratuito de Supabase
+// no acepta archivos de mas de 50 MB. Aqui se vuelven a juntar en el orden en
+// que vienen, y lo que se comprueba despues es la huella del archivo ENTERO:
+// si un trozo llegara mal o cambiado, el resultado final no cuadraria.
+//
+// La gestoria no ve nada de esto: pulsa Descargar y recibe un solo .exe.
+function bajarConAvance(urls, tamanoTotal){
+  var trozos = [], yaLeidos = 0;
+  var avanzar = function(n){
+    if (tamanoTotal) barra(Math.min(99, Math.round(n * 100 / tamanoTotal)));
+  };
+  var siguiente = function(i){
+    if (i >= urls.length){
+      var total = trozos.reduce(function(a, b){ return a + b.byteLength; }, 0);
+      var todo = new Uint8Array(total), pos = 0;
+      trozos.forEach(function(t){ todo.set(new Uint8Array(t), pos); pos += t.byteLength; });
+      return Promise.resolve(todo.buffer);
+    }
+    return bajarUno(urls[i], null, yaLeidos, tamanoTotal, avanzar).then(function(b){
+      trozos.push(b);
+      yaLeidos += b.byteLength;
+      return siguiente(i + 1);
+    });
+  };
+  return siguiente(0);
 }
 
 function sha256De(buffer){
@@ -371,7 +398,7 @@ $("#btn-descargar").addEventListener("click", function(){
     decir("#aviso-descarga", "Descargando LexIA <b>" + d.version + "</b>"
           + (mb ? " · " + mb : "") + "…<br>No cerréis esta pestaña.", "neutro");
     b.textContent = "Descargando…";
-    return bajarConAvance(d.url, d.tamano);
+    return bajarConAvance(d.urls && d.urls.length ? d.urls : [d.url], d.tamano);
   }).then(function(bytes){
     barra(100);
     b.textContent = "Comprobando…";
