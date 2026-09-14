@@ -1,0 +1,16 @@
+{
+ "firmado": {
+  "version": "6.9.0",
+  "fecha": "2026-09-14",
+  "archivo": "LexIA-6.9.0-instalador.exe",
+  "partes": [
+   "LexIA-6.9.0-instalador.exe.parte00",
+   "LexIA-6.9.0-instalador.exe.parte01"
+  ],
+  "url": "https://lexiagestoria-ops.github.io/Lexiagestoria/clientes.html",
+  "sha256": "0c711da7ae54cb46a6e691e6e6eb817632bf3e0c61fe6517722926e70bcb3d79",
+  "tamano": 80846029,
+  "notas": "Aviso de versiones nuevas, firmadas por nosotros"
+ },
+ "firma": "fJTeEGBybb9Qh1ZJQTqbTNa-uHd_812hXA3BoRhP063okrhkIm5WNybdm_iS37Ao6yc6CvuONoGvCAVSRthHCA"
+}
