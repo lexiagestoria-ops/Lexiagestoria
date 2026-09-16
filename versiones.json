@@ -1,16 +1,28 @@
 {
  "firmado": {
   "version": "6.9.0",
-  "fecha": "2026-09-14",
+  "fecha": "2026-09-16",
   "archivo": "LexIA-6.9.0-instalador.exe",
   "partes": [
    "LexIA-6.9.0-instalador.exe.parte00",
    "LexIA-6.9.0-instalador.exe.parte01"
   ],
   "url": "https://lexiagestoria-ops.github.io/Lexiagestoria/clientes.html",
-  "sha256": "0c711da7ae54cb46a6e691e6e6eb817632bf3e0c61fe6517722926e70bcb3d79",
-  "tamano": 80846029,
-  "notas": "Aviso de versiones nuevas, firmadas por nosotros"
+  "sha256": "53f59edf72b0adee42289dacf7a35b383de38077ad1785f18365fc88fef756eb",
+  "tamano": 80849648,
+  "notas": "Con asistente de IA",
+  "ia": {
+   "modelo": {
+    "archivo": "Qwen_Qwen3.5-2B-Q4_K_M.gguf",
+    "sha256": "57a1085840f497d764a7fc5d346922dbde961efb54cc792ea81d694fd846a1d8",
+    "tamano": 1396198496
+   },
+   "llama": {
+    "archivo": "llama-b11009-bin-win-cpu-x64.zip",
+    "sha256": "39973a6c78303dd3cf0ab202a0ec24976579b80704320733e43b086b70af558d",
+    "tamano": 18438146
+   }
+  }
  },
- "firma": "fJTeEGBybb9Qh1ZJQTqbTNa-uHd_812hXA3BoRhP063okrhkIm5WNybdm_iS37Ao6yc6CvuONoGvCAVSRthHCA"
+ "firma": "U2hSFKESrrgAR7JhiVAb1RWf8AKyUe1lUByWlhBA4ebjpHZJYdtxs1biyLpmrmGywPKj-IaeyB2AWlFf3Y0gCg"
 }
