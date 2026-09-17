@@ -1,0 +1,10 @@
+# LexIA — mientras no se anuncie, que no aparezca en buscadores.
+#
+# Esto NO es seguridad: cualquiera con la direccion entra igual, y el
+# versiones.json TIENE que ser publico porque lo lee LexIA instalada en las
+# gestorias, sin credenciales. Esto solo evita que Google la indexe y que
+# alguien la encuentre buscando "gestoria IA" antes de que estemos listos.
+#
+# Para lanzar: borrar este archivo y quitar el meta noindex de las paginas.
+User-agent: *
+Disallow: /

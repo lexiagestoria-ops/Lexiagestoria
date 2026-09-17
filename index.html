@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="robots" content="noindex, nofollow" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LexIA — Encuentra cualquier documento de tu gestoría en segundos</title>
   <meta name="description" content="LexIA es un buscador con Inteligencia Artificial que se instala en el servidor de tu gestoría y encuentra cualquier documento, carpeta o dato en segundos. Funciona en local: tus archivos no salen de tu empresa." />
@@ -426,10 +427,10 @@ footer a:hover{color:#fff}
       <div class="pricing-wrapper">
         <div class="pricing-card">
           <div class="pricing-price">
-            <span class="price-amount">69,99 &euro;</span>
-            <span class="price-period">al mes, IVA no incluido</span>
+            <span class="price-amount">69,99&nbsp;&euro;</span>
+            <span class="price-period">al mes, IVA no incluido &middot; precio previsto</span>
           </div>
-          <p class="pricing-note">Primer mes de prueba. Se puede cancelar cuando quer&aacute;is.</p>
+          <p class="pricing-note">Precio previsto para el lanzamiento. Todav&iacute;a no se puede contratar.</p>
           <ul class="pricing-features">
             <li>&#10003; Instalaci&oacute;n y puesta en marcha incluidas</li>
             <li>&#10003; Consultas ilimitadas para todo el equipo</li>
@@ -439,13 +440,22 @@ footer a:hover{color:#fff}
             <li>&#10003; Actualizaciones y soporte incluidos</li>
           </ul>
 
+          <!-- LA CONTRATACION SE PONE CUANDO SE LANCE.
+               Aqui iba el enlace de pago de Stripe. Se ha quitado a proposito
+               mientras LexIA esta en pruebas: cobrar exige tener los datos
+               fiscales publicados, la facturacion resuelta y Stripe en modo
+               real, y nada de eso esta hecho todavia. Un boton de "Contratar"
+               que no puede cobrar de verdad no es un adelanto: es una promesa
+               que no se puede cumplir. Para volver a ponerlo hace falta el
+               bloque #bloque-pago, su aviso y el trozo de script del final. -->
           <div id="bloque-pago">
-            <div class="aviso-pruebas" id="nota-pruebas">
-              <b>Modo pruebas.</b> Este pago es de Stripe en modo test: no cobra dinero real.
-              Tarjeta 4242&nbsp;4242&nbsp;4242&nbsp;4242, cualquier fecha futura y cualquier CVC.
+            <div class="aviso-pruebas">
+              <b>Todav&iacute;a no est&aacute; a la venta.</b> LexIA est&aacute; en pruebas con
+              gestor&iacute;as reales. Si os interesa probarlo sobre vuestros propios
+              archivos, escribidnos y hablamos.
             </div>
-            <a href="#" class="btn btn-primary btn-xl" id="btn-contratar" rel="nofollow">
-              Contratar LexIA
+            <a href="mailto:lexiagestoria@gmail.com?subject=Quiero%20probar%20LexIA&amp;body=Hola%2C%20somos%20una%20gestor%C3%ADa%20y%20nos%20gustar%C3%ADa%20probar%20LexIA.%0A%0ANombre%20de%20la%20gestor%C3%ADa%3A%20%0AN%C3%BAmero%20de%20personas%3A%20%0ATel%C3%A9fono%20de%20contacto%3A%20" class="btn btn-primary btn-xl" id="btn-contratar">
+              Escribidnos para probarlo
             </a>
           </div>
 
@@ -532,24 +542,21 @@ if(aceptar){
 }
 
 // ── Contratacion ────────────────────────────────────────────────────────
-var ENLACE_PAGO  = "https://buy.stripe.com/test_6oU7sLfeob8U7nK5Rs0gw01";
-var MODO_PRUEBAS = true;   // <- a false y cambiar ENLACE_PAGO cuando Stripe este en modo real
-// Cuenta de Stripe: "Entorno de prueba de Gestion y procesamiento de datos
-// derivada de chatbot" (acct_1Ta9WzEHPKJbt6UQ). Es la que tiene el webhook
-// apuntando a Supabase. Hubo otra cuenta de pruebas con un enlace distinto y
-// los pagos caian ahi, sin llegar nunca a la base de datos: si algun dia un
-// pago no aparece en Supabase, lo primero que hay que mirar es si el enlace
-// pertenece a esta cuenta.
-
-(function(){
-  var boton = document.getElementById("btn-contratar");
-  var nota  = document.getElementById("nota-pruebas");
-  if(boton) boton.href = ENLACE_PAGO;
-  // El aviso de "modo pruebas" desaparece solo al pasar a produccion. Mientras
-  // siga en test hay que dejarlo: el checkout acepta la tarjeta y no cobra, y
-  // sin el aviso alguien podria creer que ha contratado de verdad.
-  if(nota && !MODO_PRUEBAS) nota.style.display = "none";
-})();
+//
+// QUITADO MIENTRAS LEXIA ESTA EN PRUEBAS. Aqui vivia el enlace de pago:
+//
+//   var ENLACE_PAGO  = "https://buy.stripe.com/test_...";
+//   var MODO_PRUEBAS = true;
+//   document.getElementById("btn-contratar").href = ENLACE_PAGO;
+//
+// Para volver a ponerlo hay que hacer antes tres cosas, y ninguna es opcional:
+// tener los datos fiscales publicados en el Aviso Legal y en la Privacidad,
+// tener resuelta la facturacion con IVA, y pasar Stripe a modo real con un
+// enlace de ESTA cuenta, la que tiene el webhook apuntando a Supabase
+// (acct_1Ta9WzEHPKJbt6UQ). Hubo otra cuenta de pruebas con un enlace distinto
+// y los pagos caian ahi sin llegar nunca a la base de datos: si algun dia un
+// pago no aparece en Supabase, lo primero que hay que mirar es de que cuenta
+// es el enlace.
 </script>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Área de clientes — LexIA</title>
-<meta name="description" content="Zona de clientes de LexIA: descarga del instalador y gestión de la suscripción." />
+<meta name="description" content="Zona de clientes de LexIA: descarga del instalador." />
 <!-- Esta pagina NO debe salir en Google. No porque tenga nada secreto dentro
      (el instalador no esta aqui: esta en un almacen privado y hace falta la
      clave de licencia), sino porque no tiene ningun sentido que una gestoria
@@ -96,15 +96,15 @@ footer a{margin-right:16px}
       <svg viewBox="0 0 64 64" role="img" aria-label="LexIA"><rect width="64" height="64" rx="15" fill="#1f5fbf"/><circle cx="28" cy="27" r="12" fill="none" stroke="#fff" stroke-width="5"/><path d="M37 36 L50 49" stroke="#fff" stroke-width="6" stroke-linecap="round"/></svg>
       <span>Lex<span class="acento">IA</span></span>
     </a>
-    <a href="index.html#precios" class="btn-suave" style="padding:10px 16px;border:1.5px solid var(--linea);border-radius:10px;text-decoration:none;font-weight:600;font-size:14px">Contratar</a>
+    <a href="index.html" class="btn-suave" style="padding:10px 16px;border:1.5px solid var(--linea);border-radius:10px;text-decoration:none;font-weight:600;font-size:14px">Volver a la web</a>
   </div>
 </nav>
 
 <div class="container">
   <header>
     <h1>Área de clientes</h1>
-    <p class="entradilla">Aquí se descarga LexIA y se gestiona la suscripción.
-       Todo con la clave de licencia que os llegó por correo al contratar.</p>
+    <p class="entradilla">Aquí se descarga LexIA, con la clave de licencia que os
+       hemos dado.</p>
   </header>
 
   <!-- ── DESCARGA ────────────────────────────────────────────────────── -->
@@ -171,27 +171,19 @@ footer a{margin-right:16px}
        si ese ordenador es el servidor o un puesto de trabajo.</p>
   </div>
 
-  <!-- ── SUSCRIPCION Y BAJA ──────────────────────────────────────────── -->
-  <div class="tarjeta">
-    <h2>Facturas, tarjeta y dar de baja</h2>
-    <p class="sub">Se abre vuestra página de facturación, donde podéis ver y
-       descargar las facturas, cambiar la tarjeta y cancelar la suscripción
-       vosotros mismos, sin escribirnos ni esperar a que contestemos.</p>
+  <!-- ── SUSCRIPCION Y BAJA ──────────────────────────────────────────────
+       QUITADO MIENTRAS LEXIA ESTA EN PRUEBAS.
 
-    <label for="clave-portal">Clave de licencia</label>
-    <div class="fila">
-      <input id="clave-portal" type="text" placeholder="LEXIA-XXXX-XXXX-XXXX"
-             autocomplete="off" spellcheck="false" maxlength="24" />
-      <button class="btn-primario" id="btn-portal">Entrar</button>
-    </div>
-    <div class="aviso" id="aviso-portal"></div>
+       Aqui iba "Facturas, tarjeta y dar de baja", que abria el portal de
+       facturacion de Stripe con la clave de licencia. Se ha quitado porque
+       durante las pruebas las licencias se crean a mano y no tienen ningun
+       cliente de Stripe detras: ese boton habria fallado SIEMPRE. Un boton que
+       falla siempre es peor que no tenerlo, y ademas ensena a desconfiar de la
+       pagina justo a quien estamos pidiendo que la pruebe.
 
-    <p class="nota"><b>Qué pasa si canceláis:</b> LexIA no se apaga de golpe ni
-       borra nada. Sigue funcionando hasta el final del periodo que ya tenéis
-       pagado y después deja de renovarse. Vuestros documentos son vuestros y
-       están en vuestro servidor: nunca han estado en ningún otro sitio, así que
-       no hay nada que recuperar ni que reclamar.</p>
-  </div>
+       Se vuelve a poner tal cual cuando Stripe este en modo real. Lo que hacia
+       falta sigue estando: la funcion 'portal' en Supabase, el markup de esta
+       tarjeta y el trozo de script "Portal de facturacion" del final. -->
 
   <p class="nota">¿La clave no aparece? Está en el correo de bienvenida, y también
      dentro de LexIA, en <b>Ajustes</b>. Si no la encontráis, escribid a
@@ -231,7 +223,6 @@ function autoformato(input){
   });
 }
 autoformato($("#clave-descarga"));
-autoformato($("#clave-portal"));
 
 // El limite de tiempo no es un adorno. Sin el, si nuestro servidor no contesta
 // (corte de red, Supabase caido, un proxy de la gestoria que bloquea la
@@ -469,27 +460,10 @@ $("#btn-descargar").addEventListener("click", function(){
 });
 
 // ── Portal de facturacion ─────────────────────────────────────────────
-$("#btn-portal").addEventListener("click", function(){
-  var b = this, clave = limpiar($("#clave-portal").value);
-  if (!clave) { decir("#aviso-portal", "Escribid vuestra clave de licencia.", "mal"); return; }
-  b.disabled = true; b.textContent = "Abriendo…";
-  decir("#aviso-portal", "Preparando vuestra página de facturación…", "neutro");
-
-  pedir("portal", clave).then(function(d){
-    if (!d.ok || !d.url) { decir("#aviso-portal", d.mensaje || "No se ha podido abrir.", "mal"); return; }
-    decir("#aviso-portal", "Listo. Si no se abre sola, " +
-          '<a href="' + d.url + '">entrad aquí</a>.', "ok");
-    location.href = d.url;
-  }).catch(function(){
-    decir("#aviso-portal", "No hemos podido conectar con el servidor. Comprobad la conexión a internet y volved a intentarlo; si sigue igual, escribidnos a lexiagestoria@gmail.com.", "mal");
-  }).then(function(){
-    b.disabled = false; b.textContent = "Entrar";
-  });
-});
-
-// Enter en cualquiera de los dos campos hace lo esperable.
-$("#clave-descarga").addEventListener("keydown", function(e){ if(e.key==="Enter") $("#btn-descargar").click(); });
-$("#clave-portal").addEventListener("keydown", function(e){ if(e.key==="Enter") $("#btn-portal").click(); });
+//
+// Quitado con su tarjeta. Llamaba a la funcion 'portal' de Supabase con la
+// clave de licencia y abria la pagina de facturacion de Stripe. Vuelve
+// cuando haya cobros de verdad.
 </script>
 </body>
 </html>
