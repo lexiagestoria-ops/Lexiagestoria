@@ -1,15 +1,15 @@
 {
  "firmado": {
-  "version": "6.9.2",
-  "fecha": "2026-09-17",
-  "archivo": "LexIA-6.9.2-instalador.exe",
+  "version": "6.9.5",
+  "fecha": "2026-09-18",
+  "archivo": "LexIA-6.9.5-instalador.exe",
   "partes": [
-   "LexIA-6.9.2-instalador.exe"
+   "LexIA-6.9.5-instalador.exe"
   ],
   "url": "https://lexiagestoria-ops.github.io/Lexiagestoria/clientes.html",
-  "sha256": "1d3a6b3128305f945a5eb434cf6e86bdfadfdd2389a8fc45e7796e989e7e8de3",
-  "tamano": 80853065,
-  "notas": "Respuestas al instante; la IA ya no hace esperar",
+  "sha256": "e09944dc38ea1ae3d4e23bb3d33024f2ef3ed1aa1fc2cdfb01054672eef188d9",
+  "tamano": 80858921,
+  "notas": "Respuestas al instante; el asistente de IA viene incluido",
   "ia": {
    "modelo": {
     "archivo": "Qwen_Qwen3.5-2B-Q4_K_M.gguf",
@@ -23,5 +23,5 @@
    }
   }
  },
- "firma": "MqLIlWX72xZi8x-8UaR4CdTg6yJpwoizsEbMJXznuUmzmHIHK28BhKbzC_NPn23ph2qs3wcoY8gEFHvwGSi3Cw"
+ "firma": "sE6827rhY525NJ6DZ0-eLdEerCtV7v0fUzV7cHdK4jQBHpbGadNe0r0zxSFe3gSrXRVqfMZ33h3PbRpyDouRDw"
 }
